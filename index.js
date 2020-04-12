@@ -24,13 +24,32 @@ app.get('/', (req, res)=>{
 });
 
 
-app.post('/', (req, res)=>{
-    // get access to the information send by the browser.
-    req.on('data', data =>{
-        console.log(data.toString('utf8'));
-    });
+// where is the next function come from?
+// My guest, it is building by the app.post() itself.
+const bodyParser = (req, res, next) =>{
+    if (req.method === 'POST'){
+        req.on('data', data=>{
+            const parsed = data.toString('utf8').split('&');
+            const formDate = {};
+            for (let pair of parsed){
+                const [key, value] = pair.split('=');
+                formDate[key] = value;
+            }
+            req.body = formDate;
+            next();
+        }
+        );
+    } else {
+        next();
+    }
+}
 
-    console.log("Get Something");
+
+
+
+app.post('/', bodyParser ,(req, res)=>{
+    // get access to the information send by the browser.
+    console.log(req.body);
     
     res.send('account created');
 
