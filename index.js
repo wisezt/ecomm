@@ -62,7 +62,7 @@ app.post('/', (req, res)=>{
 
 
 
-app.post('/products',  (req, res)=>{
+app.post('/products', (req, res)=>{
     // get access to the information send by the browser.
     console.log(req.body);
     
