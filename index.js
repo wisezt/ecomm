@@ -2,6 +2,7 @@ console.log("This one Works");
 
 const express = require('express');
 const bodyParser = require('body-parser');
+const usersRepo = require('./repositories/users');
 
 const app = express();
 
@@ -51,20 +52,35 @@ app.get('/', (req, res)=>{
 
 
 
-app.post('/', (req, res)=>{
-    // get access to the information send by the browser.
-    console.log(req.body);
+// app.post('/', (req, res)=>{
+//     // get access to the information send by the browser.
+//     console.log(req.body);
     
-    res.send('account created');
+//     res.send('account created');
 
 
-});
+// });
 
 
 
-app.post('/products', (req, res)=>{
+app.post('/', async (req, res)=>{
     // get access to the information send by the browser.
     console.log(req.body);
+    // deconstruct the object
+    const {email, password, passwordConfirmation} = req.body;
+
+    const existUser = await usersRepo.getOneBy({email});
+    if (existUser){
+        res.send('Email in use');
+    } 
+    console.log(email);
+    console.log(password);
+    console.log(passwordConfirmation);
+    if (password !== passwordConfirmation){
+        console.log('Password must match');
+      return res.send('Password must match');
+    }
+
     
     res.send('account created');
 
