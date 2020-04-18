@@ -67,6 +67,22 @@ class UsersRepository{
         await this.writeAll(filteredRecords);
     }
 
+    async update(id, attrs){
+        const records = await this.getAll();
+        // const record = await this.getOne(id);
+        const record = records.find(record => record.id ===id);
+
+
+        if (!record){
+            throw new Error(` update doesn't find ${id} not find `);
+        }
+        
+        Object.assign(record, attrs);
+        await this.writeAll(records);
+        
+        
+    }
+
 
 }
 
@@ -76,7 +92,9 @@ const test = async () => {
     
     // const user = await repo.getOne('ac27d176');
 
-    await repo.delete("e33ae98d");
+    await repo.update("c43a50bb", {password: '123456'});
+
+    //repo.create({email: 'test01', password: '123456789'});
 
     const users = await repo.getAll();
 
